@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file alias="logo">img/logo.png</file>
+        <file alias="suspect_logo">img/suspect_logo.png</file>
+    </qresource>
+    <qresource prefix="/skin">
+        <file alias="inside_bg">img/background_inside.png</file>
+        <file alias="outside_bg">img/background_outside.png</file>
+        <file alias="picture_bg">img/background_picture_label.png</file>
+        <file alias="video_bg">img/background_video_label.png</file>
+        <file alias="title_bg">img/background_title.png</file>
+    </qresource>
+    <qresource prefix="/scrollbar">
+        <file alias="arrow_down">img/arrow_down.png</file>
+        <file alias="arrow_left">img/arrow_left.png</file>
+        <file alias="arrow_right">img/arrow_right.png</file>
+        <file alias="arrow_up">img/arrow_up.png</file>
+        <file alias="handle_horizontal">img/handle_horizontal.png</file>
+        <file alias="handle_vertical">img/handle_vertical.png</file>
+    </qresource>
+    <qresource prefix="/button">
+        <file alias="button_close">img/button_close.png</file>
+        <file alias="button_max">img/button_max.png</file>
+        <file alias="button_min">img/button_min.png</file>
+        <file alias="button_search">img/button_search.png</file>
+        <file alias="radio_checked">img/radiobutton_checked.png</file>
+        <file alias="radio_unchecked">img/radiobutton_unchecked.png</file>
+        <file alias="combobox_arrow_down">img/combobox_arrow_down.png</file>
+    </qresource>
+</RCC>
