@@ -98,7 +98,7 @@ MainWidget::MainWidget(QWidget *parent)
     main_layout->setMargin(0);
     this->setLayout(main_layout);
 
-    TrainPCA("../PCATrainData");
+    TrainPCA("../data/PCATrainData");
 
     connect(windows_title, SIGNAL(MinWindowsSig()), this, SLOT(MinWindowsSlot()));
     connect(title_widget, SIGNAL(turnPage(int)), this, SLOT(turnPage(int)));
