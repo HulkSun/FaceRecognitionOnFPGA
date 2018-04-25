@@ -1,4 +1,4 @@
-﻿#include "title_widget.h"
+#include "title_widget.h"
 
 TitleWidget::TitleWidget(QWidget *parent)
     : QWidget(parent)
@@ -9,12 +9,12 @@ TitleWidget::TitleWidget(QWidget *parent)
     track_button->setCursor(Qt::PointingHandCursor);
     track_button->setStyleSheet("background-color: rgb(38,42,53); color: rgb(66,169,235); font: bold 20px; border-top:3px solid rgb(66,169,235);"); //border-style: insert
     track_button->setFixedSize(150, 40);
-    //    track_button->setStyleSheet("background-color: rgb(255, 255, 255); border-style: inset");
+//    track_button->setStyleSheet("background-color: rgb(255, 255, 255); border-style: inset");
     track_button->setFont(font);
-    blacklist_button = new QPushButton(tr("黑名单管理"));
+    blacklist_button = new QPushButton(tr("人脸库管理"));
     blacklist_button->setCursor(Qt::PointingHandCursor);
     blacklist_button->setFixedSize(150, 40);
-    //    blacklist_button->setStyleSheet("background-color: rgb(225, 225, 225)");
+//    blacklist_button->setStyleSheet("background-color: rgb(225, 225, 225)");
     blacklist_button->setStyleSheet("background-color: rgb(47,53,67); color: rgb(102,102,102); font: bold 20px; border-top:3px solid rgb(47,53,67);");
     blacklist_button->setFont(font);
 
@@ -48,14 +48,14 @@ void TitleWidget::turnPage(QString current_page)
     case 0:
         track_button->setStyleSheet("background-color: rgb(38,42,53); color: rgb(66,169,235); font: bold 20px; border-top:3px solid rgb(66,169,235);");
         blacklist_button->setStyleSheet("background-color: rgb(47,53,67); color: rgb(102,102,102); font: bold 20px; border-top:3px solid rgb(47,53,67);");
-        //        track_button->setStyleSheet("background-color: rgb(255, 255, 255); border-style: inset");
-        //        blacklist_button->setStyleSheet("background-color: rgb(225, 225, 225)");
+//        track_button->setStyleSheet("background-color: rgb(255, 255, 255); border-style: inset");
+//        blacklist_button->setStyleSheet("background-color: rgb(225, 225, 225)");
         break;
     case 1:
         track_button->setStyleSheet("background-color: rgb(47,53,67); color: rgb(102,102,102); font: bold 20px; border-top:3px solid rgb(47,53,67);");
         blacklist_button->setStyleSheet("background-color: rgb(38,42,53); color: rgb(66,169,235); font: bold 20px; border-top:3px solid rgb(66,169,235);");
-        //        track_button->setStyleSheet("background-color: rgb(225, 225, 225)");
-        //        blacklist_button->setStyleSheet("background-color: rgb(255, 255, 255); border-style: inset");
+//        track_button->setStyleSheet("background-color: rgb(225, 225, 225)");
+//        blacklist_button->setStyleSheet("background-color: rgb(255, 255, 255); border-style: inset");
         break;
     default:
         break;

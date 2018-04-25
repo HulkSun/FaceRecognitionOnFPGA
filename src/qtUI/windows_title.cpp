@@ -3,9 +3,9 @@
 WindowsTitle::WindowsTitle(QWidget *parent)
     : QWidget(parent)
 {
-    logo_label = new QLabel();
-    logo_label->setPixmap(QPixmap(":/icon/logo"));
-    title_label = new QLabel(tr("实时大规模检索"));
+    // logo_label = new QLabel(tr("基于FPGA的人脸识别系统"));
+    // logo_label->setPixmap(QPixmap(":/icon/logo").scaled(35, 35));
+    title_label = new QLabel(tr("基于FPGA的人脸识别系统"));
     title_label->setStyleSheet("color: rgb(255,255,255); font: bold 22px;");
     title_label->setFixedHeight(40);
 
@@ -27,9 +27,9 @@ WindowsTitle::WindowsTitle(QWidget *parent)
 
     QHBoxLayout *main_layout = new QHBoxLayout();
     main_layout->addStretch();
-    main_layout->addWidget(logo_label, 0, Qt::AlignVCenter);
-//    main_layout->addSpacing(20);
-//    main_layout->addWidget(title_label, 0, Qt::AlignVCenter);
+    // main_layout->addWidget(logo_label, 0, Qt::AlignVCenter);
+    main_layout->addSpacing(20);
+    main_layout->addWidget(title_label, 0, Qt::AlignVCenter);
     main_layout->addStretch();
     main_layout->addWidget(min_btn, 0, Qt::AlignVCenter);
     main_layout->addSpacing(5);
