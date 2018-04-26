@@ -27,7 +27,7 @@ MainWidget::MainWidget(QWidget *parent)
     qRegisterMetaType<std::vector<SearchPersonInfo>>("std::vector<SearchPersonInfo>");
 
     this->setWindowIcon(QIcon(":/icon/logo"));
-    this->setWindowTitle("实时大规模检索");
+    this->setWindowTitle("基于FPGA的人脸识别系统");
     this->setMinimumSize(900, 600);
     this->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);              // 设置无边框
     QDesktopWidget *desktop = QApplication::desktop();

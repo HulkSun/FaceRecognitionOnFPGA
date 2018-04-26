@@ -109,7 +109,7 @@ BlackListWidget::BlackListWidget(QWidget *parent)
     function_layout->addWidget(add_button);
     function_layout->addWidget(return_button);
     function_layout->addStretch();
-    function_layout->addWidget(query_edit);
+    // function_layout->addWidget(query_edit);
     QVBoxLayout *left_layout = new QVBoxLayout();
     left_layout->addSpacing(20);
     left_layout->addLayout(function_layout);
@@ -180,7 +180,7 @@ BlackListWidget::BlackListWidget(QWidget *parent)
 
     picture_table = new QTableWidget();
     picture_table->setRowCount(1);   // 设置行数
-    picture_table->setColumnCount(5);
+    picture_table->setColumnCount(4);
     picture_table->setRowHeight(0, 75);
     picture_table->setFixedHeight(94);
     picture_table->horizontalHeader()->setVisible(false);   // 隐藏行表头
@@ -259,7 +259,7 @@ BlackListWidget::BlackListWidget(QWidget *parent)
     person_layout->addStretch(3);
 
     person_group = new QGroupBox();
-    person_group->setTitle(tr("  人员信息"));
+    person_group->setTitle(tr("  添加人脸数据"));
     person_group->setStyleSheet("QGroupBox{border: none; color: rgb(66,169,235); font: bold 18px;}"
                                 "QGroupBox::title{subcontrol-origin:margin; subcontrol-position:top left; padding:4 0px; border-left: 4px solid rgb(66,169,235);}");
     person_group->setLayout(person_layout);
@@ -617,7 +617,8 @@ bool BlackListWidget::InitInfoGroup()
 void BlackListWidget::SearchPersonSlot()
 {
     operate_type = Query;
-    QString id = query_edit->text();
+    // QString id = query_edit->text();
+    QString id = "";
     QueryPersonById(id);
 }
 
@@ -667,8 +668,8 @@ void BlackListWidget::ReturnTableSlot()
 //    delete_button->show();
     return_button->hide();
     stacked_table->setCurrentWidget(blacklist_table);
-    query_edit->clear();
-    query_edit->setPlaceholderText(tr("请输入要查询的id"));
+    // query_edit->clear();
+    // query_edit->setPlaceholderText(tr("请输入要查询的id"));
     current_row = blacklist_table->currentRow();
     CheckPerson(current_row);
 }

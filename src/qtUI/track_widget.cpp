@@ -69,7 +69,8 @@ TrackWidget::TrackWidget(QWidget *parent)
     QLabel* suspect_picture_label = new QLabel();
     suspect_picture_label->setPixmap(QPixmap(":/icon/suspect_logo").scaled(15,15));
     suspect_picture_label->setStyleSheet("background-color:rgb(23,26,33);border:0px;");
-    QLabel* suspect_word_label = new QLabel("嫌疑人报警");
+    // QLabel* suspect_word_label = new QLabel("嫌疑人报警");
+    QLabel* suspect_word_label = new QLabel("识别结果");
     suspect_word_label->setStyleSheet("background-color:rgb(23,26,33); color:rgb(255,255,255);border:0px;");
     QHBoxLayout* tmp_suspect_layout = new QHBoxLayout();
     tmp_suspect_layout->addStretch();
@@ -157,7 +158,7 @@ TrackWidget::TrackWidget(QWidget *parent)
     url_layout->addSpacing(15);
     url_layout->addWidget(choose_video_btn);
     url_layout->addSpacing(7);
-    url_layout->addWidget(start_btn);
+    // url_layout->addWidget(start_btn);
     url_layout->addSpacing(20);
     url_layout->setMargin(0);
 
@@ -167,7 +168,7 @@ TrackWidget::TrackWidget(QWidget *parent)
 
     QVBoxLayout *left_layout = new QVBoxLayout();
     left_layout->addSpacing(30);
-    left_layout->addLayout(url_layout);
+    // left_layout->addLayout(url_layout);
     left_layout->addSpacing(20);
     left_layout->addLayout(video_layout);
     left_layout->addSpacing(20);
@@ -179,19 +180,19 @@ TrackWidget::TrackWidget(QWidget *parent)
 
     QHBoxLayout* dispatch_layout = new QHBoxLayout();
     dispatch_layout->addStretch();
-    dispatch_layout->addWidget(dispatch_label);
-    dispatch_layout->addWidget(dispatch_num_label);
+    // dispatch_layout->addWidget(dispatch_label);
+    // dispatch_layout->addWidget(dispatch_num_label);
     dispatch_layout->addStretch();
 
     QHBoxLayout* query_result_layout = new QHBoxLayout();
     query_result_layout->addSpacing(5);
-    query_result_layout->addWidget(query_result_label);
-    query_result_layout->addWidget(query_result_num_label);
+    // query_result_layout->addWidget(query_result_label);
+    // query_result_layout->addWidget(query_result_num_label);
     query_result_layout->addStretch();
-    query_result_layout->addWidget(check_match_label);
-    query_result_layout->addWidget(check_match_num_label);
+    // query_result_layout->addWidget(check_match_label);
+    // query_result_layout->addWidget(check_match_num_label);
     query_result_layout->addStretch();
-    query_result_layout->addWidget(history_search_btn);
+    // query_result_layout->addWidget(history_search_btn);
     query_result_layout->addSpacing(5);
 
     QVBoxLayout *right_layout = new QVBoxLayout();
