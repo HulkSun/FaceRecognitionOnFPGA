@@ -34,7 +34,6 @@
 #ifndef _HW_PARAM_H
 #define _HW_PARAM_H
 
-
 // Macro architecture parameters
 // General
 #define VEC_SIZE            16              // larger than 4, i.e., 4, 8, 16, ...

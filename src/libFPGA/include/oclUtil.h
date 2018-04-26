@@ -9,12 +9,8 @@
 #include <algorithm>
 #include <stdarg.h>
 
-#ifdef _WIN32 // Windows
-#include <windows.h>
-#else         // Linux
 #include <stdio.h>
 #include <unistd.h>
-#endif
 
 #include "CL/opencl.h"
 

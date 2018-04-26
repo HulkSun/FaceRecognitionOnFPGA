@@ -46,6 +46,7 @@ set(LIB_LIST
 add_subdirectory(libFaceDetect)
 add_subdirectory(libSearch)
 add_subdirectory(libFeature)
+add_subdirectory(libFPGA)
 
 qt5_add_resources(qrc_FILES resources/resources.qrc)
 add_executable(${PROJECT_NAME} main.cpp ${SRC_LIST}  ${qrc_FILES})

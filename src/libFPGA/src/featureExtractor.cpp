@@ -13,7 +13,7 @@ FeatureExtractor::~FeatureExtractor()
     cleanup();
 }
 
-std::vector<float> FeatureExtractor::extractFeature(const string &img)
+std::vector<float> FeatureExtractor::extractFeature(const cv::Mat &img)
 {
     loadImageToBuffer(img);
     executeKernel();
@@ -698,10 +698,9 @@ void FeatureExtractor::readDataBack()
     reorderOutput(output_one_item, output_reorder, output_config[output_w], output_config[output_h], output_config[output_n]);
 }
 
-void FeatureExtractor::loadImageToBuffer(const string &input_file_path)
+void FeatureExtractor::loadImageToBuffer(const cv::Mat &img)
 {
     // load picture from files
-    Mat img = imread(input_file_path);
     Mat img2;
     resize(img, img2, Size(layer_config_original[0][data_w], layer_config_original[0][data_h]));
     // convert to 8-bit fixed-point

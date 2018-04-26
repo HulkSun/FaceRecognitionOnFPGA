@@ -27,7 +27,7 @@ class FeatureExtractor
   public:
     FeatureExtractor();
     ~FeatureExtractor();
-    std::vector<float> extractFeature(const std::string &img);
+    std::vector<float> extractFeature(const cv::Mat &img);
 
   private:
     const char *kernelFile = "/home/sh/workspace/OpenCLkernel/conv_16_32.aocx";
@@ -137,7 +137,7 @@ class FeatureExtractor
     cl_int status;
 
     //将图片数据读取带Buffer中
-    void loadImageToBuffer(const std::string &input_file_path);
+    void loadImageToBuffer(const cv::Mat &img);
     //读取网络参数
     int prepare();
     //从FPGA读取数据
