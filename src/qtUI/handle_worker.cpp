@@ -108,7 +108,7 @@ void HandleWorker::StartPlayCameraSlot(int _userId, QString url)
     int delayTime = 33;
     int chaseTime = 0;
     int frameNum = 0;
-    if(!StartStream(url))
+    if (!StartStream(url))
         return;
     QTime allTime;
     allTime.start();
@@ -151,6 +151,7 @@ bool HandleWorker::StartStream(QString url)
 {
     videoStreamIndex = -1;
     av_register_all();                           //注册库中所有可用的文件格式和解码器
+    avdevice_register_all();    
     avformat_network_init();                     //初始化网络流格式，使用 RTSP 网络流时必须先执行
     pAVFormatContext = avformat_alloc_context(); //申请一个 AVFormatContext结构的内存，并进行简单初始化
     pAVFrame = av_frame_alloc();
@@ -181,10 +182,15 @@ bool HandleWorker::InitStream(QString url)
     }
     //打开视频流
     // For IPCarema
-    int result = avformat_open_input(&pAVFormatContext, url.toStdString().c_str(), NULL, &options);
+    // int result = avformat_open_input(&pAVFormatContext, url.toStdString().c_str(), NULL, &options);
     // For WebCam
-    // AVInputFormat *ifmt = av_find_input_format("video4linux2");
-    // int result = avformat_open_input(&pAVFormatContext, "/dev/video0", ifmt, NULL);
+    AVInputFormat *inputFmt = av_find_input_format("video4linux2");
+    if (NULL == inputFmt)
+    {
+        std::cout << "Null point!" << std::endl;
+    }
+    /*3、打开视频采集设备*/
+    int result = avformat_open_input(&pAVFormatContext, "/dev/video0", inputFmt, NULL);
     if (result < 0)
     {
         qDebug() << "打开视频流失败 " << result;
@@ -397,45 +403,45 @@ void HandleWorker::MTCNNDetect(cv::Mat &img)
             painter.setPen(QPen(QColor(255, 255, 255), 2));
             painter.drawText(y + w / 2 - rect_w / 2, x - 5, QString::fromStdString(personInfo.name));
 
-            // 保存图像，并写入数据库
-            if (tim.elapsed() > 2000)
-            { // 与上次保存的时间超过1秒再保存
-                QDir qdir;
-                QString saveDir = "./saveData";
-                if (!qdir.exists(saveDir))
-                    qdir.mkdir(saveDir);
-                QString fileDir = saveDir + "/" + QString::fromStdString(personInfo.name);
-                if (!qdir.exists(fileDir))
-                    qdir.mkdir(fileDir);
-                QDateTime tempDataTime = QDateTime::currentDateTime();
-                QString filePath = fileDir + "/" + QString::number(userId) + "_" + QString::fromStdString(personInfo.name) + "_" + tempDataTime.toString("yyyy-MM-dd_hh:mm:ss") + ".jpg";
-                pixmap.save(filePath); /* 保存帧图像 */
-                QString snapshotFilePath = fileDir + "/" + QString::number(userId) + "_" + QString::fromStdString(personInfo.name) + "_" + tempDataTime.toString("yyyy-MM-dd_hh:mm:ss") + "_snapshot.jpg";
-                QPixmap facePixmap = MatToQPixmap(face);
-                facePixmap.save(snapshotFilePath); /* 保存快照 */
+            // // 保存图像，并写入数据库
+            // if (tim.elapsed() > 2000)
+            // { // 与上次保存的时间超过1秒再保存
+            //     QDir qdir;
+            //     QString saveDir = "./saveData";
+            //     if (!qdir.exists(saveDir))
+            //         qdir.mkdir(saveDir);
+            //     QString fileDir = saveDir + "/" + QString::fromStdString(personInfo.name);
+            //     if (!qdir.exists(fileDir))
+            //         qdir.mkdir(fileDir);
+            //     QDateTime tempDataTime = QDateTime::currentDateTime();
+            //     QString filePath = fileDir + "/" + QString::number(userId) + "_" + QString::fromStdString(personInfo.name) + "_" + tempDataTime.toString("yyyy-MM-dd_hh:mm:ss") + ".jpg";
+            //     pixmap.save(filePath); /* 保存帧图像 */
+            //     QString snapshotFilePath = fileDir + "/" + QString::number(userId) + "_" + QString::fromStdString(personInfo.name) + "_" + tempDataTime.toString("yyyy-MM-dd_hh:mm:ss") + "_snapshot.jpg";
+            //     QPixmap facePixmap = MatToQPixmap(face);
+            //     facePixmap.save(snapshotFilePath); /* 保存快照 */
 
-                QSqlQuery query;
-                query.prepare("insert into HistoryInfo (CameraName, PersonId, PersonName, PersonSex, TimeStamp, FramePath, SnapshotPath, IdentifyPath) "
-                              "values (:CameraName, :PersonId, :PersonName, :PersonSex, :TimeStamp, :FramePath, :SnapshotPath, :IdentifyPath)");
-                query.bindValue(":CameraName", Cameras[userId].name);
-                query.bindValue(":PersonId", QString::fromStdString(personInfo.id));
-                query.bindValue(":PersonName", QString::fromStdString(personInfo.name));
-                query.bindValue(":PersonSex", QString::fromStdString(personInfo.sex));
-                query.bindValue(":TimeStamp", tempDataTime.toString("yyyy-MM-dd_hh:mm:ss"));
-                query.bindValue(":SimDegree", personInfo.sim);
-                query.bindValue(":FramePath", filePath);
-                query.bindValue(":SnapshotPath", snapshotFilePath);
-                query.bindValue(":IdentifyPath", QString::fromStdString(personInfo.path));
-                query.exec();
-                query.finish();
-                //                query.exec("select CameraName, PersonName from HistoryInfo");
-                //                while (query.next()) {
-                //                    QString cameraName = query.value(0).toString();
-                //                    QString personName = query.value(1).toString();
-                //                    qDebug() << "camera: " << cameraName << "| person: " << personName;
-                //                }
-                tim.restart();
-            }
+            //     QSqlQuery query;
+            //     query.prepare("insert into HistoryInfo (CameraName, PersonId, PersonName, PersonSex, TimeStamp, FramePath, SnapshotPath, IdentifyPath) "
+            //                   "values (:CameraName, :PersonId, :PersonName, :PersonSex, :TimeStamp, :FramePath, :SnapshotPath, :IdentifyPath)");
+            //     query.bindValue(":CameraName", Cameras[userId].name);
+            //     query.bindValue(":PersonId", QString::fromStdString(personInfo.id));
+            //     query.bindValue(":PersonName", QString::fromStdString(personInfo.name));
+            //     query.bindValue(":PersonSex", QString::fromStdString(personInfo.sex));
+            //     query.bindValue(":TimeStamp", tempDataTime.toString("yyyy-MM-dd_hh:mm:ss"));
+            //     query.bindValue(":SimDegree", personInfo.sim);
+            //     query.bindValue(":FramePath", filePath);
+            //     query.bindValue(":SnapshotPath", snapshotFilePath);
+            //     query.bindValue(":IdentifyPath", QString::fromStdString(personInfo.path));
+            //     query.exec();
+            //     query.finish();
+            //     //                query.exec("select CameraName, PersonName from HistoryInfo");
+            //     //                while (query.next()) {
+            //     //                    QString cameraName = query.value(0).toString();
+            //     //                    QString personName = query.value(1).toString();
+            //     //                    qDebug() << "camera: " << cameraName << "| person: " << personName;
+            //     //                }
+            //     tim.restart();
+            // }
         }
 
         framePersonInfo.push_back(personInfo);

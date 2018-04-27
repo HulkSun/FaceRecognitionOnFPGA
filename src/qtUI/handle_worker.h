@@ -33,6 +33,7 @@ extern "C"{
 #include <libswscale/swscale.h>
 #include <libavutil/frame.h>
 #include <libavutil/avstring.h>
+#include <libavdevice/avdevice.h>
 #ifdef __cplusplus
 }
 #endif
