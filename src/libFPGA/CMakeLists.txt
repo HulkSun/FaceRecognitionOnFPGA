@@ -21,6 +21,6 @@ target_link_libraries(${LIB_NAME} terasic_a10_mmd)
 target_link_libraries(${LIB_NAME} elf)
 target_link_libraries(${LIB_NAME} ${OpenCV_LIBS})
 
-# add_executable(a main.cpp)
-# target_link_libraries(a ${LIB_NAME} )
+#add_executable(test main.cpp)
+#target_link_libraries(test ${LIB_NAME} )
 

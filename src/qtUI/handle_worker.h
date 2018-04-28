@@ -18,6 +18,7 @@
 #include "blacklist_database.h"
 #include "global.h"
 #include "kcftracker.hpp"
+#include "featureExtractor.h"
 
 #ifndef INT64_C
 #define INT64_C
@@ -69,7 +70,8 @@ private:
     std::vector<SearchPersonInfo> framePersonInfo;
     std::vector<cv::Rect> frameLocationInfo;
 
-    CenterFace *CenterE;
+    // CenterFace *CenterE;
+    FeatureExtractor *FPGAE;
     MTCNN* MtcnnD;
 
     /*与 ffmpeg 有关的变量*/

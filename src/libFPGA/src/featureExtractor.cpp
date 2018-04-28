@@ -517,19 +517,19 @@ void FeatureExtractor::executeKernel()
 
                 // Excutes Kernel
                 //
-                if (k == 0 && pic_num == 1)
-                    printf("\nExecuting Layer %d:\n", j + 1);
+                // if (k == 0 && pic_num == 1)
+                //     printf("\nExecuting Layer %d:\n", j + 1);
 
                 // kernel memRd
-                if (k == 0 && pic_num == 1)
-                    printf("\nLaunching single work-item kernel winbuffer\n");
+                // if (k == 0 && pic_num == 1)
+                //     printf("\nLaunching single work-item kernel winbuffer\n");
 
                 status = clEnqueueTask(que_memRd[i], knl_memRd[i], 0, NULL, &memRd_event[i]);
                 checkError(status, "Failed to launch kernel memRD kernel");
 
                 // kernel conv
-                if (k == 0 && pic_num == 1)
-                    printf("\nLaunching single work-item kernel Conv\n");
+                // if (k == 0 && pic_num == 1)
+                //     printf("\nLaunching single work-item kernel Conv\n");
 
                 status = clEnqueueTask(que_conv[i], knl_conv[i], 0, NULL, &conv_event[i]);
                 checkError(status, "Failed to launch kernel conv kernel");
@@ -539,8 +539,8 @@ void FeatureExtractor::executeKernel()
                 {
                     status = clEnqueueTask(que_pool[i], knl_pool[i], 0, NULL, &pool_event[i]);
                     checkError(status, "Failed to launch kernel pooling");
-                    if (k == 0 && pic_num == 1)
-                        printf("\nLaunching single work-item kernel Pooling\n");
+                    // if (k == 0 && pic_num == 1)
+                    //     printf("\nLaunching single work-item kernel Pooling\n");
                 }
 
                 // kernel memWr
@@ -551,10 +551,10 @@ void FeatureExtractor::executeKernel()
                 knl_memWr_local_size[1] = 1;
                 knl_memWr_local_size[2] = LANE_NUM;
 
-                if (k == 0 && pic_num == 1)
-                    printf("\nLaunching kernel MemWr with local size: %d, %d, %d  (global size: %d, %d, %d)\n",
-                           (int)knl_memWr_local_size[0], (int)knl_memWr_local_size[1], (int)knl_memWr_local_size[2],
-                           (int)knl_memWr_global_size[0], (int)knl_memWr_global_size[1], (int)knl_memWr_global_size[2]);
+                // if (k == 0 && pic_num == 1)
+                //     printf("\nLaunching kernel MemWr with local size: %d, %d, %d  (global size: %d, %d, %d)\n",
+                //            (int)knl_memWr_local_size[0], (int)knl_memWr_local_size[1], (int)knl_memWr_local_size[2],
+                //            (int)knl_memWr_global_size[0], (int)knl_memWr_global_size[1], (int)knl_memWr_global_size[2]);
 
                 status = clEnqueueNDRangeKernel(que_memWr[i], knl_memWr[i], 3, NULL, knl_memWr_global_size, knl_memWr_local_size, 0, NULL, &memWr_event[i]);
 
@@ -571,8 +571,8 @@ void FeatureExtractor::executeKernel()
                     knl_lrn_local_size[1] = 1;
                     knl_lrn_local_size[2] = layer_config[j][pool_z] / VEC_SIZE;
 
-                    if (k == 0 && pic_num == 1)
-                        printf("\nLaunching kernel lrn with local size: %d, %d, %d  (global size: %d, %d, %d)\n", (int)knl_lrn_local_size[0], (int)knl_lrn_local_size[1], (int)knl_lrn_local_size[2], (int)knl_lrn_global_size[0], (int)knl_lrn_global_size[1], (int)knl_lrn_global_size[2]);
+                    // if (k == 0 && pic_num == 1)
+                    //     printf("\nLaunching kernel lrn with local size: %d, %d, %d  (global size: %d, %d, %d)\n", (int)knl_lrn_local_size[0], (int)knl_lrn_local_size[1], (int)knl_lrn_local_size[2], (int)knl_lrn_global_size[0], (int)knl_lrn_global_size[1], (int)knl_lrn_global_size[2]);
 
                     status = clEnqueueNDRangeKernel(que_memWr[i], knl_lrn[i], 3, NULL, knl_lrn_global_size, knl_lrn_local_size, 0, NULL, &lrn_event[i]);
                     checkError(status, "Failed to launch kernel lrn");
@@ -614,6 +614,8 @@ void FeatureExtractor::executeKernel()
 
         t.stop();
         time = t.get_time_s();
+        // printf("Total runtime: %fs \n\n", time);
+
         // readDataBack();
 
     } // end of board iteration
@@ -649,14 +651,14 @@ void FeatureExtractor::readDataBack()
     // For the last conv layer and all fc layers, read result from one of the fc buffers
     if (layer_config[LAYER_NUM - 1][memwr_dst] == 2)
     {
-        printf("\nCopyed all batched results from fc_1 buffers.\n");
+        // printf("\nCopyed all batched results from fc_1 buffers.\n");
         status = clEnqueueReadBuffer(que_memWr[0], fc_1_buf[0], CL_FALSE, // read from device0
                                      0, sizeof(DTYPE) * read_buf_size, (void *)output, 0, NULL, &finish_event[0]);
         checkError(status, "Failed to set transfer output data");
     }
     else if (layer_config[LAYER_NUM - 1][memwr_dst] == 3)
     {
-        printf("\nCopyed all batched results from fc_2 buffers.\n");
+        // printf("\nCopyed all batched results from fc_2 buffers.\n");
         status = clEnqueueReadBuffer(que_memWr[0], fc_2_buf[0], CL_FALSE, // read from device0
                                      0, sizeof(DTYPE) * read_buf_size, (void *)output, 0, NULL, &finish_event[0]);
         checkError(status, "Failed to set transfer output data");
@@ -684,7 +686,7 @@ void FeatureExtractor::readDataBack()
 
     if (LAYER_NUM >= CONV_NUM)
     { //Select with batch item you would like to verify from the last conv and all fc output
-        printf("Selected item = %d from the combined batch results in fc buffers\n", batch_item_num);
+        // printf("Selected item = %d from the combined batch results in fc buffers\n", batch_item_num);
         extractOutput(output, output_one_item, batch_item_num, input_config[batch_size], output_config[output_w], output_config[output_h], output_config[output_n]);
     }
     else
@@ -720,7 +722,7 @@ void FeatureExtractor::loadImageToBuffer(const cv::Mat &img)
             }
         }
     }
-    
+
     // // load binary from files
     // unsigned file_size;
     // // load image from binary files
@@ -963,7 +965,7 @@ int FeatureExtractor::prepare()
         bin_file_r.seekg(0, bin_file_r.beg);
 
         bin_file_r.read((char *)weights, sizeof(DTYPE) * WEIGHTS_FILE_SIZE);
-        printf("\n%d total weights read \n", file_size / ((int)sizeof(DTYPE)));
+        // printf("\n%d total weights read \n", file_size / ((int)sizeof(DTYPE)));
         if (WEIGHTS_FILE_SIZE != (file_size / (sizeof(DTYPE))))
             printf("Warning: weight file size does not match user configuration !!!\n");
         bin_file_r.close();

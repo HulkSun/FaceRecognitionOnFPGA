@@ -1,9 +1,10 @@
+#ifndef _NET_CONFIG_H_
+#define _NET_CONFIG_H_
 
 typedef signed char DTYPE;
 
 //----------- Design Parameters --------------//
 // select what platform is used
-const char *vendor_name = "Intel";
 
 #define DEVICE_TYPE CL_DEVICE_TYPE_ACCELERATOR
 
@@ -35,9 +36,8 @@ const char *vendor_name = "Intel";
 // Original problem size
 // File size is in num of DTYPE numbers
 #define IMAGE_FILE_SIZE (224 * 224 * 3)
-#define WEIGHTS_FILE_SIZE 124004086 
+#define WEIGHTS_FILE_SIZE 124004086
 #define LAYER_NUM 15 //without fc8
 #define CONV_NUM 13
 
-const char *weight_file_path = "/home/sh/data/vgg_face_self/weights.dat";
-// const char *input_file_path = "/home/sh/data/vgg_face_self/image.dat";
+#endif // !_NET_CONFIG_H_

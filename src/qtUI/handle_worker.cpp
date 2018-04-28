@@ -12,7 +12,8 @@ HandleWorker::HandleWorker(int _userId)
     userId = _userId;
     stopFlag = false;
     preFaceNum = 0; // 用来记录上一帧里人脸个数
-    CenterE = NULL;
+    // CenterE = NULL;
+    FPGAE = NULL;
     MtcnnD = NULL;
 }
 
@@ -25,8 +26,11 @@ void HandleWorker::StopPlaySlot(int _userId)
 
 void HandleWorker::StartPlayLocalVideoSlot(QString url)
 {
-    if (CenterE == NULL)
-        CenterE = new CenterFace(strModelDir);
+    // if (CenterE == NULL)
+    //     CenterE = new CenterFace(strModelDir);
+    if (FPGAE == NULL)
+        FPGAE = new FeatureExtractor();
+
     if (MtcnnD == NULL)
         MtcnnD = new MTCNN(strModelDir);
 
@@ -98,8 +102,10 @@ void HandleWorker::StartPlayCameraSlot(int _userId, QString url)
 {
     if (userId != _userId)
         return;
-    if (CenterE == NULL)
-        CenterE = new CenterFace(strModelDir);
+    // if (CenterE == NULL)
+    //     CenterE = new CenterFace(strModelDir);
+    if (FPGAE == NULL)
+        FPGAE = new FeatureExtractor();
     if (MtcnnD == NULL)
         MtcnnD = new MTCNN(strModelDir);
 
@@ -150,8 +156,8 @@ void HandleWorker::StartPlayCameraSlot(int _userId, QString url)
 bool HandleWorker::StartStream(QString url)
 {
     videoStreamIndex = -1;
-    av_register_all();                           //注册库中所有可用的文件格式和解码器
-    avdevice_register_all();    
+    av_register_all(); //注册库中所有可用的文件格式和解码器
+    avdevice_register_all();
     avformat_network_init();                     //初始化网络流格式，使用 RTSP 网络流时必须先执行
     pAVFormatContext = avformat_alloc_context(); //申请一个 AVFormatContext结构的内存，并进行简单初始化
     pAVFrame = av_frame_alloc();
@@ -182,15 +188,15 @@ bool HandleWorker::InitStream(QString url)
     }
     //打开视频流
     // For IPCarema
-    // int result = avformat_open_input(&pAVFormatContext, url.toStdString().c_str(), NULL, &options);
+    int result = avformat_open_input(&pAVFormatContext, url.toStdString().c_str(), NULL, &options);
     // For WebCam
-    AVInputFormat *inputFmt = av_find_input_format("video4linux2");
-    if (NULL == inputFmt)
-    {
-        std::cout << "Null point!" << std::endl;
-    }
-    /*3、打开视频采集设备*/
-    int result = avformat_open_input(&pAVFormatContext, "/dev/video0", inputFmt, NULL);
+    // AVInputFormat *inputFmt = av_find_input_format("video4linux2");
+    // if (NULL == inputFmt)
+    // {
+    //     std::cout << "Null point!" << std::endl;
+    // }
+    // int result = avformat_open_input(&pAVFormatContext, "/dev/video0", inputFmt, NULL);
+
     if (result < 0)
     {
         qDebug() << "打开视频流失败 " << result;
@@ -331,13 +337,17 @@ void HandleWorker::MTCNNDetect(cv::Mat &img)
         }
 
         alignTime.restart();
-        std::vector<float> feature1024 = CenterE->ExtractFeature(face);
-        cv::Mat dataMat = cv::Mat(feature1024);
-        qmtx.lock();
-        cv::Mat dst = pca.project(dataMat.t());
-        qmtx.unlock();
-        std::vector<float> feature;
-        feature.assign((float *)dst.datastart, (float *)dst.dataend);
+        //use centerFace
+        // std::vector<float> feature1024 = CenterE->ExtractFeature(face);
+        // cv::Mat dataMat = cv::Mat(feature1024);
+        // qmtx.lock();
+        // cv::Mat dst = pca.project(dataMat.t());
+        // qmtx.unlock();
+        // std::vector<float> feature;
+        // feature.assign((float *)dst.datastart, (float *)dst.dataend);
+
+        //use FPGA
+        std::vector<float> feature = FPGAE->extractFeature(img);
         extractTake += alignTime.elapsed();
         //        qDebug() << QString::number(userId) << " | extract feature" << alignTime.elapsed();
 
@@ -603,5 +613,6 @@ QPixmap HandleWorker::MatToQPixmap(cv::Mat &cvImg)
 HandleWorker::~HandleWorker()
 {
     delete MtcnnD;
-    delete CenterE;
+    // delete CenterE;
+    delete FPGAE;
 }

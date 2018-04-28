@@ -6,14 +6,23 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_FLAGS -std=c++11)
+
 set(Caffe_DIR /home/sh/workspace/caffe/)
+set(ALTERA_PATH /home/sh/intelFPGA_pro/16.1)
+include_directories(${ALTERA_PATH}/hld/host/include)
 
 add_definitions(-DCPU_ONLY)
 add_compile_options( -fpic -fopenmp -lm -lz)
 
 include_directories(${Caffe_DIR}/include)
+
 link_directories(${Caffe_DIR}/build/lib)
 link_directories(/usr/local/ffmpeg/lib)
+
+link_directories(
+    ${ALTERA_PATH}/hld/board/de5a_net_i2/linux64/lib 
+    ${ALTERA_PATH}/hld/host/linux64/lib)
+
 include_directories(
     ${Qt5Core_INCLUDE_DIRS} 
     ${Qt5Gui_INCLUDE_DIRS} 
@@ -23,7 +32,8 @@ include_directories(
 include_directories(${OpenCV_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/libFaceDetect
                     ${CMAKE_CURRENT_SOURCE_DIR}/libFeature
-                    ${CMAKE_CURRENT_SOURCE_DIR}/libSearch/include)
+                    ${CMAKE_CURRENT_SOURCE_DIR}/libSearch/include
+                    ${CMAKE_CURRENT_SOURCE_DIR}/libFPGA/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/qtUI)
 include_directories(${Qt5Widgets_LIBRARIES})
 include_directories(/usr/local/ffmpeg/include)
@@ -35,13 +45,15 @@ set(LIB_LIST
     searchtool 
     feature
     faceDetect
+    FPGA
     caffe
     boost_system 
     boost_filesystem 
     glog protobuf 
     ${FFMPEG_LIBRARIES} 
     swscale 
-    swresample)
+    swresample
+    )
 
 add_subdirectory(libFaceDetect)
 add_subdirectory(libSearch)

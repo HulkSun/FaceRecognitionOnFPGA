@@ -1,6 +1,6 @@
 // OpenCL Utility Functions
-#ifndef _OCL_UTIL_H
-#define _OCL_UTIL_H
+#ifndef _OCL_UTIL_H_
+#define _OCL_UTIL_H_
 
 #include <stdlib.h>
 #include <string.h>

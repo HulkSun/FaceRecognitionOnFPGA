@@ -118,10 +118,14 @@ int dim = 8630;
 int main()
 {
     FeatureExtractor mFeatureExtractor;
-    cv::Mat img = cv::imread("cat.jpg");
-    vector<float> result = mFeatureExtractor.extractFeature(img);
-    dim = result.size();
-    cout << dim << endl;
+    while (1)
+    {
+        cv::Mat img = cv::imread("/home/sh/workspace/PipeCNN/data/picture/cat.jpg");
+        vector<float> result = mFeatureExtractor.extractFeature(img);
+        dim = result.size();
+        cout << flush << "\r Feature dim: " << dim << endl;;
+    }
+
     // verify(result);
     return 0;
 }

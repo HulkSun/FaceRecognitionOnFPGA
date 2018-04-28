@@ -16,6 +16,7 @@
 #include "center_face.h"
 #include "my_qlabel.h"
 #include "global.h"
+#include "featureExtractor.h"
 
 #define Add 0
 #define Delete 1
@@ -23,7 +24,8 @@
 #define Query 3
 
 extern MTCNN *MTCNNDetector;
-extern CenterFace *CenterExtractor;
+// extern CenterFace *CenterExtractor;
+extern FeatureExtractor *FPGAExtractor;
 extern cv::PCA pca;                 // pca
 
 class BlackListWidget : public QWidget

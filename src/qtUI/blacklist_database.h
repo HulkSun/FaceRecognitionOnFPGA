@@ -4,6 +4,8 @@
 #include "global.h"
 #include "center_face.h"
 #include "search_tool.h"
+#include "featureExtractor.h"
+
 class BlackListDataBase : public QObject
 {
     Q_OBJECT

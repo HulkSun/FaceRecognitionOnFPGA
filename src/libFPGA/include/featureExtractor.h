@@ -1,5 +1,5 @@
-#ifndef _FEATURE_EXTRACTOR_H
-#define _FEATURE_EXTRACTOR_H
+#ifndef _FEATURE_EXTRACTOR_H_
+#define _FEATURE_EXTRACTOR_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,6 +31,8 @@ class FeatureExtractor
 
   private:
     const char *kernelFile = "/home/sh/workspace/OpenCLkernel/conv_16_32.aocx";
+    const char *vendor_name = "Intel";
+    const char *weight_file_path = "/home/sh/data/vgg_face_self/weights.dat";
 
     // Configuration file instructions
     enum config_item
@@ -98,7 +100,7 @@ class FeatureExtractor
 
     };
 
-    Timer t; // Timer used for performance measurement
+    fpga::Timer t; // Timer used for performance measurement
     float time;
 
     //------------ Global Functions & Variables ------------//

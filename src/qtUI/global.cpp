@@ -10,10 +10,12 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include "featureExtractor.h"
 
 BlackListDataBase *blacklist_database;
 MTCNN *MTCNNDetector;
-CenterFace *CenterExtractor;
+//  CenterFace *CenterExtractor;
+FeatureExtractor *FPGAExtractor;
 cv::PCA pca;
 QMutex qmtx;
 int GpuId;
@@ -22,12 +24,13 @@ int VideoNum;
 std::string strModelDir;
 QString QstrLogDir;
 QVector<CameraConfig> Cameras;
-LogSystem* logSystem;
+LogSystem *logSystem;
 
-void MessageOutput(QtMsgType type, const QMessageLogContext& context, const QString& msg)
+void MessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QString message = QTime::currentTime().toString("[hh:mm:ss] ");
-    switch (type) {
+    switch (type)
+    {
     case QtDebugMsg:
         break;
     case QtWarningMsg:
@@ -52,7 +55,8 @@ void MessageOutput(QtMsgType type, const QMessageLogContext& context, const QStr
 bool ReadConfig(QString iniPath)
 {
     QFile iniFile(iniPath);
-    if (!iniFile.exists()) {
+    if (!iniFile.exists())
+    {
         qDebug() << "\"config.ini\" not exist.";
         return false;
     }
@@ -64,7 +68,8 @@ bool ReadConfig(QString iniPath)
 
     iniConfigRead.beginGroup("IpCamera");
     QStringList cameraList = iniConfigRead.childGroups();
-    for (int i = 0; i < cameraList.size(); ++i) {
+    for (int i = 0; i < cameraList.size(); ++i)
+    {
         iniConfigRead.beginGroup(cameraList.at(i));
         CameraConfig camera;
         camera.name = iniConfigRead.value("CameraName").toString();
@@ -90,13 +95,14 @@ bool HistoryDbConnect()
 {
     QSqlDatabase HistoryDb = QSqlDatabase::addDatabase("QSQLITE");
     HistoryDb.setDatabaseName("./HistoryInfo.db");
-    if (!HistoryDb.open()) {
+    if (!HistoryDb.open())
+    {
         qDebug() << "不能打开数据库。";
         return false;
     }
     QSqlQuery query;
     query.exec("create table HistoryInfo(CameraName QString, "
-                    "PersonId QString, PersonName QString, PersonSex QString, TimeStamp QString, SimDegree float, "
-                    "FramePath QString, SnapshotPath QString, IdentifyPath QString)");
+               "PersonId QString, PersonName QString, PersonSex QString, TimeStamp QString, SimDegree float, "
+               "FramePath QString, SnapshotPath QString, IdentifyPath QString)");
     return true;
 }

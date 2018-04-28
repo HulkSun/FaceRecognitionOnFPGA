@@ -15,6 +15,8 @@
 #include "handle_worker.h"
 #include "center_face.h"
 #include "qcustomplot.h"
+#include "featureExtractor.h"
+
 #define LABELWIDTH 1280         // 1280,     630 = 1280*((128-2)/256)
 #define LABELHEIGHT 720         // 720,     354 = 720*((128-2)/256)
 #define MAXROWCOUNT 10

@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef _HW_PARAM_H
-#define _HW_PARAM_H
+#ifndef _HW_PARAM_H_
+#define _HW_PARAM_H_
 
 // Macro architecture parameters
 // General
