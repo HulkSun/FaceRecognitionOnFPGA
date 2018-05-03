@@ -585,15 +585,17 @@ bool BlackListWidget::SaveAdd(int row)
         qfaceInfo.id = id_edit->text();
         qfaceInfo.path = imagePath;
 
-        //use centerFace
-        // std::vector<float> feature1024 = CenterExtractor->ExtractFeature(img);
-        // cv::Mat dataMat = cv::Mat(feature1024);
-        // cv::Mat dst = pca.project(dataMat.t());
-        // qfaceInfo.feature.assign((float *)dst.datastart, (float *)dst.dataend);
-
+#ifdef USE_FPGA
         // use FPGA
         std::vector<float> feature512 = FPGAExtractor.extractFeature(img);
-        qfaceInfo.feature.assign(feature512.begin(),feature512.end());
+        qfaceInfo.feature.assign(feature512.begin(), feature512.end());
+#else
+        //use centerFace
+        std::vector<float> feature1024 = CenterExtractor->ExtractFeature(img);
+        cv::Mat dataMat = cv::Mat(feature1024);
+        cv::Mat dst = pca.project(dataMat.t());
+        qfaceInfo.feature.assign((float *)dst.datastart, (float *)dst.dataend);
+#endif // USE_FPGA
         qfaceInfoVec.push_back(qfaceInfo);
     }
     emit AddPersonAndFaceSig(qinfo, qfaceInfoVec);

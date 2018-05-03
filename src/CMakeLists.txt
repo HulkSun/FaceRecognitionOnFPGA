@@ -11,6 +11,7 @@ set(Caffe_DIR /home/sh/workspace/caffe/)
 set(ALTERA_PATH /home/sh/intelFPGA_pro/16.1)
 include_directories(${ALTERA_PATH}/hld/host/include)
 
+# add_definitions(-DUSE_FPGA)
 add_definitions(-DCPU_ONLY)
 add_compile_options( -fpic -fopenmp -lm -lz)
 

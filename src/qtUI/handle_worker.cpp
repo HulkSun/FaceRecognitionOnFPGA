@@ -12,7 +12,9 @@ HandleWorker::HandleWorker(int _userId)
     userId = _userId;
     stopFlag = false;
     preFaceNum = 0; // 用来记录上一帧里人脸个数
-    // CenterE = NULL;
+#ifndef USE_FPGA
+    CenterE = NULL;
+#endif // !USE_FPGA
     MtcnnD = NULL;
 }
 
@@ -25,9 +27,10 @@ void HandleWorker::StopPlaySlot(int _userId)
 
 void HandleWorker::StartPlayLocalVideoSlot(QString url)
 {
-    // if (CenterE == NULL)
-    //     CenterE = new CenterFace(strModelDir);
-  
+#ifndef USE_FPGA
+    if (CenterE == NULL)
+        CenterE = new CenterFace(strModelDir);
+#endif // !USE_FPGA
 
     if (MtcnnD == NULL)
         MtcnnD = new MTCNN(strModelDir);
@@ -100,8 +103,10 @@ void HandleWorker::StartPlayCameraSlot(int _userId, QString url)
 {
     if (userId != _userId)
         return;
-    // if (CenterE == NULL)
-    //     CenterE = new CenterFace(strModelDir);
+#ifndef USE_FPGA
+    if (CenterE == NULL)
+        CenterE = new CenterFace(strModelDir);
+#endif // !USE_FPGA
     if (MtcnnD == NULL)
         MtcnnD = new MTCNN(strModelDir);
 
@@ -331,17 +336,20 @@ void HandleWorker::MTCNNDetect(cv::Mat &img)
         }
 
         alignTime.restart();
-        //use centerFace
-        // std::vector<float> feature1024 = CenterE->ExtractFeature(face);
-        // cv::Mat dataMat = cv::Mat(feature1024);
-        // qmtx.lock();
-        // cv::Mat dst = pca.project(dataMat.t());
-        // qmtx.unlock();
-        // std::vector<float> feature;
-        // feature.assign((float *)dst.datastart, (float *)dst.dataend);
 
+#ifdef USE_FPGA
         //use FPGA
         std::vector<float> feature = FPGAE.extractFeature(img);
+#else
+        //use centerFace
+        std::vector<float> feature1024 = CenterE->ExtractFeature(face);
+        cv::Mat dataMat = cv::Mat(feature1024);
+        qmtx.lock();
+        cv::Mat dst = pca.project(dataMat.t());
+        qmtx.unlock();
+        std::vector<float> feature;
+        feature.assign((float *)dst.datastart, (float *)dst.dataend);
+#endif
         extractTake += alignTime.elapsed();
         //        qDebug() << QString::number(userId) << " | extract feature" << alignTime.elapsed();
 
@@ -607,5 +615,7 @@ QPixmap HandleWorker::MatToQPixmap(cv::Mat &cvImg)
 HandleWorker::~HandleWorker()
 {
     delete MtcnnD;
-    // delete CenterE;
+#ifndef USE_FPGA
+    delete CenterE;
+#endif // !USE_FPGA
 }

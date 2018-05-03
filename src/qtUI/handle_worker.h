@@ -26,7 +26,7 @@
 #endif
 //引入 ffmpeg 头文件
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
@@ -46,11 +46,11 @@ class HandleWorker : public QObject
 {
     Q_OBJECT
 
-public:
+  public:
     HandleWorker(int _userId);
     ~HandleWorker();
     void MTCNNDetect(cv::Mat &img);
-    void Tracking(cv::Mat& img);
+    void Tracking(cv::Mat &img);
     QPixmap MatToQPixmap(cv::Mat &cvImg);
     bool StartStream(QString url);
     bool InitStream(QString url);
@@ -58,11 +58,11 @@ public:
     void StopStream();
     void RepaintRect(QPainter *painter, QRect rect, QColor color);
 
-private:
+  private:
     int userId;
     double threshold[3] = {0.7, 0.8, 0.9};
     double factor = 0.5;
-    int minSize = 80;   // 120
+    int minSize = 80; // 120
     QTime tim;
 
     bool stopFlag;
@@ -70,9 +70,12 @@ private:
     std::vector<SearchPersonInfo> framePersonInfo;
     std::vector<cv::Rect> frameLocationInfo;
 
-    // CenterFace *CenterE;
+#ifdef USE_FPGA
     FeatureExtractor &FPGAE = FeatureExtractor::getInstance();
-    MTCNN* MtcnnD;
+#else
+    CenterFace *CenterE;
+#endif
+    MTCNN *MtcnnD;
 
     /*与 ffmpeg 有关的变量*/
     QMutex mutex;
@@ -88,17 +91,17 @@ private:
     int videoHeight;
     int videoSize;
 
-    std::vector<KCFTracker> trackerVec;         // kcf track
+    std::vector<KCFTracker> trackerVec; // kcf track
 
-signals:
+  signals:
     void InitPlayerSig(int _userId, bool);
-    void ShowInTableSig(int _userId, const QString &name, const QString& sex, const QString &imagePath, const QPixmap &shotFace, const float cosSim, int preFaceNum);
-//    void ShowInTableSig(ShowPersonInfo, int);
+    void ShowInTableSig(int _userId, const QString &name, const QString &sex, const QString &imagePath, const QPixmap &shotFace, const float cosSim, int preFaceNum);
+    //    void ShowInTableSig(ShowPersonInfo, int);
     void UpdateImageSig(int _userId, QPixmap &pixmap);
     void SendImageSig(int _userId, QImage);
     void SendTimeTakeSig(int _userId, QVector<double>);
 
-private slots:
+  private slots:
     void StartPlayLocalVideoSlot(QString url);
     void StartPlayCameraSlot(int _userId, QString url);
     void StopPlaySlot(int _userId);

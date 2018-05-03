@@ -2,7 +2,9 @@
 
 extern BlackListDataBase *blacklist_database;
 extern MTCNN *MTCNNDetector;
+#ifndef USE_FPGA
 extern CenterFace *CenterExtractor;
+#endif // !USE_FPGA
 extern cv::PCA pca;
 extern QMutex qmtx;
 
@@ -34,7 +36,9 @@ MainWidget::MainWidget(QWidget *parent)
     this->setFixedSize(desktop->width(), desktop->height());
 
     MTCNNDetector = new MTCNN(strModelDir);
-    // CenterExtractor = new CenterFace(strModelDir);
+#ifndef USE_FPGA
+    CenterExtractor = new CenterFace(strModelDir);
+#endif // !USE_FPGA
 
     blacklist_database = new BlackListDataBase(DataDim, "");
     blacklist_thread = new QThread();
@@ -99,7 +103,9 @@ MainWidget::MainWidget(QWidget *parent)
     main_layout->setMargin(0);
     this->setLayout(main_layout);
 
-    // TrainPCA("../data/PCATrainData");
+#ifndef USE_FPGA
+    TrainPCA("../data/PCATrainData");
+#endif // !USE_FPGA
 
     connect(windows_title, SIGNAL(MinWindowsSig()), this, SLOT(MinWindowsSlot()));
     connect(title_widget, SIGNAL(turnPage(int)), this, SLOT(turnPage(int)));
@@ -122,7 +128,7 @@ MainWidget::MainWidget(QWidget *parent)
     {
         emit StartPlayCameraSig(i, Cameras[i].url);
     }
-    blacklist_database->InitBlackList(100, DataDim / 2, 0.73, 1, 0);
+    blacklist_database->InitBlackList(100, DataDim / 2, 0.75, 1, 0);
     //        AddFaceDataSet("/home/lchy/dataset/facesData");
 }
 
@@ -158,14 +164,17 @@ bool MainWidget::TrainPCA(QString trainDir)
         if (img.empty())
             continue;
 
-        // std::vector<float> feature = CenterExtractor->ExtractFeature(img);
+#ifdef USE_FPGA
         std::vector<float> feature = FPGAExtractor.extractFeature(img);
+#else
+        std::vector<float> feature = CenterExtractor->ExtractFeature(img);
+#endif // USE_FPGA
         features.push_back(feature);
         ++imgCount;
     }
 
-    // cv::Mat dataSet(imgCount, 1024, CV_32FC1);
-    cv::Mat dataSet(imgCount, 512, CV_32FC1);
+    cv::Mat dataSet(imgCount, 1024, CV_32FC1);
+    // cv::Mat dataSet(imgCount, 512, CV_32FC1);
 
     for (int i = 0; i != dataSet.rows; ++i)
         for (int j = 0; j != dataSet.cols; ++j)
@@ -255,15 +264,18 @@ bool MainWidget::AddFaceDataSet(QString _dataSetDir)
             QFaceImageInfo qfaceInfo;
             qfaceInfo.id = qinfo.id;
             qfaceInfo.path = destPath;
-            //use center face
-            // std::vector<float> feature1024 = CenterExtractor->ExtractFeature(face);
-            // cv::Mat dataMat = cv::Mat(feature1024);
-            // cv::Mat dst = pca.project(dataMat.t());
-            // qfaceInfo.feature.assign((float*)dst.datastart, (float*)dst.dataend);
 
+#ifdef USE_FPGA
             //use FPGA
             std::vector<float> feature512 = FPGAExtractor.extractFeature(img);
             qfaceInfo.feature.assign(feature512.begin(), feature512.end());
+#else
+            //use center face
+            std::vector<float> feature1024 = CenterExtractor->ExtractFeature(face);
+            cv::Mat dataMat = cv::Mat(feature1024);
+            cv::Mat dst = pca.project(dataMat.t());
+            qfaceInfo.feature.assign((float *)dst.datastart, (float *)dst.dataend);
+#endif // USE_FPGA
 
             qfaceInfoVec.push_back(qfaceInfo);
             cv::imwrite(destPath.toStdString().c_str(), face);
@@ -297,6 +309,8 @@ void MainWidget::MinWindowsSlot()
 MainWidget::~MainWidget()
 {
     delete MTCNNDetector;
-    // delete CenterExtractor;
+#ifndef USE_FPGA
+    delete CenterExtractor;
+#endif // !USE_FPGA
     delete blacklist_database;
 }

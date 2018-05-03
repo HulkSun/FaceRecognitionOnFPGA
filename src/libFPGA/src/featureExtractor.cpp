@@ -615,7 +615,7 @@ void FeatureExtractor::executeKernel()
 
         t.stop();
         time = t.get_time_s();
-        printf("Total runtime: %fs \n\n", time);
+        printf("Total runtime: %fs \n", time);
 
         // readDataBack();
 
