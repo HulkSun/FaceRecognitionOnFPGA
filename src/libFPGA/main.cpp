@@ -117,7 +117,7 @@ int dim = 8630;
 
 int main()
 {
-    FeatureExtractor mFeatureExtractor;
+    FeatureExtractor &mFeatureExtractor = FeatureExtractor::getInstance();
     while (1)
     {
         cv::Mat img = cv::imread("/home/sh/workspace/PipeCNN/data/picture/cat.jpg");

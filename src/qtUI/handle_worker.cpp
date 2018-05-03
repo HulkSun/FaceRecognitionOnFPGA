@@ -13,7 +13,6 @@ HandleWorker::HandleWorker(int _userId)
     stopFlag = false;
     preFaceNum = 0; // 用来记录上一帧里人脸个数
     // CenterE = NULL;
-    FPGAE = NULL;
     MtcnnD = NULL;
 }
 
@@ -28,8 +27,7 @@ void HandleWorker::StartPlayLocalVideoSlot(QString url)
 {
     // if (CenterE == NULL)
     //     CenterE = new CenterFace(strModelDir);
-    if (FPGAE == NULL)
-        FPGAE = new FeatureExtractor();
+  
 
     if (MtcnnD == NULL)
         MtcnnD = new MTCNN(strModelDir);
@@ -104,8 +102,6 @@ void HandleWorker::StartPlayCameraSlot(int _userId, QString url)
         return;
     // if (CenterE == NULL)
     //     CenterE = new CenterFace(strModelDir);
-    if (FPGAE == NULL)
-        FPGAE = new FeatureExtractor();
     if (MtcnnD == NULL)
         MtcnnD = new MTCNN(strModelDir);
 
@@ -186,16 +182,14 @@ bool HandleWorker::InitStream(QString url)
     {
         av_dict_set(&options, "rtsp_transport", "tcp", 0);
     }
-    //打开视频流
-    // For IPCarema
-    int result = avformat_open_input(&pAVFormatContext, url.toStdString().c_str(), NULL, &options);
-    // For WebCam
-    // AVInputFormat *inputFmt = av_find_input_format("video4linux2");
-    // if (NULL == inputFmt)
-    // {
-    //     std::cout << "Null point!" << std::endl;
-    // }
-    // int result = avformat_open_input(&pAVFormatContext, "/dev/video0", inputFmt, NULL);
+    ////打开视频流
+    //// For IPCarema
+    // int result = avformat_open_input(&pAVFormatContext, url.toStdString().c_str(), NULL, &options);
+    //// For WebCam
+    AVInputFormat *inputFmt = av_find_input_format("video4linux2");
+    if (NULL == inputFmt)
+        std::cout << "Null point!" << std::endl;
+    int result = avformat_open_input(&pAVFormatContext, "/dev/video0", inputFmt, NULL);
 
     if (result < 0)
     {
@@ -347,7 +341,7 @@ void HandleWorker::MTCNNDetect(cv::Mat &img)
         // feature.assign((float *)dst.datastart, (float *)dst.dataend);
 
         //use FPGA
-        std::vector<float> feature = FPGAE->extractFeature(img);
+        std::vector<float> feature = FPGAE.extractFeature(img);
         extractTake += alignTime.elapsed();
         //        qDebug() << QString::number(userId) << " | extract feature" << alignTime.elapsed();
 
@@ -614,5 +608,4 @@ HandleWorker::~HandleWorker()
 {
     delete MtcnnD;
     // delete CenterE;
-    delete FPGAE;
 }

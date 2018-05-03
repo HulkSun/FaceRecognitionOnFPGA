@@ -15,7 +15,7 @@
 BlackListDataBase *blacklist_database;
 MTCNN *MTCNNDetector;
 //  CenterFace *CenterExtractor;
-FeatureExtractor *FPGAExtractor;
+FeatureExtractor &FPGAExtractor = FeatureExtractor::getInstance();
 cv::PCA pca;
 QMutex qmtx;
 int GpuId;

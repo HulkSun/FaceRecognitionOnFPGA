@@ -22,14 +22,27 @@
 
 using namespace ocl_util;
 
+/* 必须设计成单例类 */
 class FeatureExtractor
 {
   public:
-    FeatureExtractor();
-    ~FeatureExtractor();
+    static FeatureExtractor &getInstance()
+    {
+        static FeatureExtractor mFeatureExtractor;
+        return mFeatureExtractor;
+    }
     std::vector<float> extractFeature(const cv::Mat &img);
 
   private:
+    FeatureExtractor()
+    {
+        initialDevice();
+    }
+    ~FeatureExtractor()
+    {
+        cleanup();
+    }
+
     const char *kernelFile = "/home/sh/workspace/OpenCLkernel/conv_16_32.aocx";
     const char *vendor_name = "Intel";
     const char *weight_file_path = "/home/sh/data/vgg_face_self/weights.dat";

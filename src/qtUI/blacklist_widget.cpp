@@ -592,7 +592,7 @@ bool BlackListWidget::SaveAdd(int row)
         // qfaceInfo.feature.assign((float *)dst.datastart, (float *)dst.dataend);
 
         // use FPGA
-        std::vector<float> feature512 = FPGAExtractor->extractFeature(img);
+        std::vector<float> feature512 = FPGAExtractor.extractFeature(img);
         qfaceInfo.feature.assign(feature512.begin(),feature512.end());
         qfaceInfoVec.push_back(qfaceInfo);
     }

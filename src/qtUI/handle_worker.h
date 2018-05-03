@@ -71,7 +71,7 @@ private:
     std::vector<cv::Rect> frameLocationInfo;
 
     // CenterFace *CenterE;
-    FeatureExtractor *FPGAE;
+    FeatureExtractor &FPGAE = FeatureExtractor::getInstance();
     MTCNN* MtcnnD;
 
     /*与 ffmpeg 有关的变量*/

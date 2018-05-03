@@ -3,15 +3,15 @@
 using namespace cv;
 using namespace std;
 
-FeatureExtractor::FeatureExtractor()
-{
-    initialDevice();
-}
+// FeatureExtractor::FeatureExtractor()
+// {
+//     initialDevice();
+// }
 
-FeatureExtractor::~FeatureExtractor()
-{
-    cleanup();
-}
+// FeatureExtractor::~FeatureExtractor()
+// {
+//     cleanup();
+// }
 
 std::vector<float> FeatureExtractor::extractFeature(const cv::Mat &img)
 {
@@ -160,6 +160,7 @@ bool FeatureExtractor::initialDevice()
         fc_2_buf[i] = clCreateBuffer(context, CL_MEM_READ_WRITE, FC_BUF_SIZE * sizeof(DTYPE), NULL, &status);
         checkError(status, "Failed to create buffer for data in fc layer");
     }
+    std::cout << "Initial Device Done!" << endl;
     return true;
 }
 
@@ -614,7 +615,7 @@ void FeatureExtractor::executeKernel()
 
         t.stop();
         time = t.get_time_s();
-        // printf("Total runtime: %fs \n\n", time);
+        printf("Total runtime: %fs \n\n", time);
 
         // readDataBack();
 

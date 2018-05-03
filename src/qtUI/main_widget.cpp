@@ -35,7 +35,6 @@ MainWidget::MainWidget(QWidget *parent)
 
     MTCNNDetector = new MTCNN(strModelDir);
     // CenterExtractor = new CenterFace(strModelDir);
-    FPGAExtractor = new FeatureExtractor();
 
     blacklist_database = new BlackListDataBase(DataDim, "");
     blacklist_thread = new QThread();
@@ -160,7 +159,7 @@ bool MainWidget::TrainPCA(QString trainDir)
             continue;
 
         // std::vector<float> feature = CenterExtractor->ExtractFeature(img);
-        std::vector<float> feature = FPGAExtractor->extractFeature(img);
+        std::vector<float> feature = FPGAExtractor.extractFeature(img);
         features.push_back(feature);
         ++imgCount;
     }
@@ -263,7 +262,7 @@ bool MainWidget::AddFaceDataSet(QString _dataSetDir)
             // qfaceInfo.feature.assign((float*)dst.datastart, (float*)dst.dataend);
 
             //use FPGA
-            std::vector<float> feature512 = FPGAExtractor->extractFeature(img);
+            std::vector<float> feature512 = FPGAExtractor.extractFeature(img);
             qfaceInfo.feature.assign(feature512.begin(), feature512.end());
 
             qfaceInfoVec.push_back(qfaceInfo);
@@ -299,6 +298,5 @@ MainWidget::~MainWidget()
 {
     delete MTCNNDetector;
     // delete CenterExtractor;
-    delete FPGAExtractor;
     delete blacklist_database;
 }

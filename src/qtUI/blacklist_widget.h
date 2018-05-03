@@ -25,21 +25,21 @@
 
 extern MTCNN *MTCNNDetector;
 // extern CenterFace *CenterExtractor;
-extern FeatureExtractor *FPGAExtractor;
-extern cv::PCA pca;                 // pca
+extern FeatureExtractor &FPGAExtractor;
+extern cv::PCA pca; // pca
 
 class BlackListWidget : public QWidget
 {
     Q_OBJECT
-public:
+  public:
     explicit BlackListWidget(QWidget *parent = 0);
     ~BlackListWidget();
     void GetDataBase();
 
     bool QueryPersonById(QString &id);
-    bool AddNewPerson(int row);   // 添加一个新人
-    bool ShowExistPerson(int row, QString name, QString sex, QString id, QString changeTime);   // 显示一个数据库已有人的信息在table中
-    bool DeleteOnePerson(int row);   // 删除row行对应人的信息
+    bool AddNewPerson(int row);                                                               // 添加一个新人
+    bool ShowExistPerson(int row, QString name, QString sex, QString id, QString changeTime); // 显示一个数据库已有人的信息在table中
+    bool DeleteOnePerson(int row);                                                            // 删除row行对应人的信息
     bool CheckPerson(int row);
     bool UploadImage();
     bool IsReadOnly(bool);
@@ -49,15 +49,15 @@ public:
 
     bool InitInfoGroup();
 
-protected:
-  void paintEvent(QPaintEvent *);
+  protected:
+    void paintEvent(QPaintEvent *);
 
-private:
+  private:
     /* blacklist config widget */
     QLineEdit *query_edit;
     QPushButton *query_button;
     QPushButton *add_button;
-//    QPushButton *delete_button;
+    //    QPushButton *delete_button;
     QPushButton *return_button;
     QTableWidget *blacklist_table;
     QTableWidget *query_result_table;
@@ -70,7 +70,7 @@ private:
     QLabel *id_label;
     QLineEdit *name_edit;
     QLineEdit *id_edit;
-//    QComboBox *sex_box;
+    //    QComboBox *sex_box;
     QRadioButton *male_radio;
     QRadioButton *female_radio;
     QPushButton *upload_button;
@@ -81,7 +81,7 @@ private:
     QGroupBox *person_group;
     int current_row;
     int operate_type;
-signals:
+  signals:
     void AddPersonSig(QPersonInfo &qinfo);
     void DeletePersonSig(QString &qid);
     void UpdatePersonSig(QPersonInfo &qinfo);
@@ -90,13 +90,13 @@ signals:
     void GetFacesSig(QString &qid);
     void AddPersonAndFaceSig(QPersonInfo qinfo, std::vector<QFaceImageInfo> qfaceInfoVec);
 
-private slots:
+  private slots:
     void SearchPersonSlot();
     void AddNewPersonSlot();
     void DeletePersonSlot();
     void ReturnTableSlot();
-    void CheckPersonSlot(QTableWidgetItem*);
-    void CheckQueryPersonSlot(QTableWidgetItem*);
+    void CheckPersonSlot(QTableWidgetItem *);
+    void CheckQueryPersonSlot(QTableWidgetItem *);
 
     void UploadPictureSlot();
     void ModifyInfoSlot();
