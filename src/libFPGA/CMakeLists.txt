@@ -14,7 +14,7 @@ link_directories(
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 aux_source_directory(src SRC_LIST)
 
-add_library(${LIB_NAME} SHARED ${SRC_LIST})
+add_library(${LIB_NAME} SHARED ${SRC_LIST}) 
 
 target_link_libraries(${LIB_NAME} alteracl)
 target_link_libraries(${LIB_NAME} terasic_a10_mmd)

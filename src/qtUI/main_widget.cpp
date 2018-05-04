@@ -103,9 +103,7 @@ MainWidget::MainWidget(QWidget *parent)
     main_layout->setMargin(0);
     this->setLayout(main_layout);
 
-#ifndef USE_FPGA
     TrainPCA("../data/PCATrainData");
-#endif // !USE_FPGA
 
     connect(windows_title, SIGNAL(MinWindowsSig()), this, SLOT(MinWindowsSlot()));
     connect(title_widget, SIGNAL(turnPage(int)), this, SLOT(turnPage(int)));
@@ -128,7 +126,7 @@ MainWidget::MainWidget(QWidget *parent)
     {
         emit StartPlayCameraSig(i, Cameras[i].url);
     }
-    blacklist_database->InitBlackList(100, DataDim / 2, 0.75, 1, 0);
+    blacklist_database->InitBlackList(100, DataDim / 2, 0.7, 1, 0);
     //        AddFaceDataSet("/home/lchy/dataset/facesData");
 }
 
@@ -173,14 +171,14 @@ bool MainWidget::TrainPCA(QString trainDir)
         ++imgCount;
     }
 
-    cv::Mat dataSet(imgCount, 1024, CV_32FC1);
-    // cv::Mat dataSet(imgCount, 512, CV_32FC1);
+    cv::Mat dataSet(imgCount, features.at(0).size(), CV_32FC1);
 
     for (int i = 0; i != dataSet.rows; ++i)
         for (int j = 0; j != dataSet.cols; ++j)
             dataSet.at<float>(i, j) = features[i][j];
 
     pca(dataSet, cv::Mat(), CV_PCA_DATA_AS_ROW, DataDim);
+    qDebug() << "Total images : " << imgCount << endl;
     qDebug() << "PCA model training done! It take" << tim.elapsed() / 1000.0 << "s.";
 
     return true;
@@ -228,13 +226,13 @@ bool MainWidget::AddFaceDataSet(QString _dataSetDir)
                << "*.bmp";
         subDataDir.setNameFilters(filter);
         QFileInfoList sub2FileList = subDataDir.entryInfoList();
-        //        qDebug() << "------------------- " << subFileList[id].filePath() << " -------------------";
+        qDebug() << "------------------- " << subFileList[id].filePath() << " -------------------";
         for (int k = 0; k < sub2FileList.count(); ++k)
         {
             if (sub2FileList[k].fileName() == QString(".") || sub2FileList[k].fileName() == QString(".."))
                 continue;
             QString imgName = sub2FileList[k].fileName();
-            //            qDebug() << imgName;
+            qDebug() << imgName;
             if (imgName.left(1) == QString("F"))
                 qinfo.sex = QString("女");
             QString destPath = idDir + "/" + QString::number(id, 10) + "_" + QString::number(k, 10) + ".jpg";
@@ -267,16 +265,16 @@ bool MainWidget::AddFaceDataSet(QString _dataSetDir)
 
 #ifdef USE_FPGA
             //use FPGA
-            std::vector<float> feature512 = FPGAExtractor.extractFeature(img);
-            qfaceInfo.feature.assign(feature512.begin(), feature512.end());
+            std::vector<float> feature = FPGAExtractor.extractFeature(face);
+            cv::Mat dataMat = cv::Mat(feature);
 #else
             //use center face
             std::vector<float> feature1024 = CenterExtractor->ExtractFeature(face);
             cv::Mat dataMat = cv::Mat(feature1024);
+
+#endif // USE_FPGA
             cv::Mat dst = pca.project(dataMat.t());
             qfaceInfo.feature.assign((float *)dst.datastart, (float *)dst.dataend);
-#endif // USE_FPGA
-
             qfaceInfoVec.push_back(qfaceInfo);
             cv::imwrite(destPath.toStdString().c_str(), face);
         }

@@ -102,7 +102,7 @@ bool BlackListDataBase::AddPersonSlot(QPersonInfo &qinfo)
     PersonInfo info = QPersonToPerson(qinfo);
     if (!search_tool->addPerson(info))
     {
-        //        qDebug() << "添加人员信息失败！";
+        qDebug() << "添加人员信息失败！";
         return false;
     }
     return true;
@@ -135,7 +135,7 @@ bool BlackListDataBase::AddFaceSlot(QFaceImageInfo &qfaceInfo)
     FaceImageInfo faceInfo = QFaceToFace(qfaceInfo);
     if (!search_tool->addFace(faceInfo))
     {
-        //        qDebug() << "id =" << qfaceInfo.id << "添加照片" << qfaceInfo.path << "失败！";
+        qDebug() << "id =" << qfaceInfo.id << "添加照片" << qfaceInfo.path << "失败！";
         return false;
     }
     return true;

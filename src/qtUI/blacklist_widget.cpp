@@ -587,15 +587,15 @@ bool BlackListWidget::SaveAdd(int row)
 
 #ifdef USE_FPGA
         // use FPGA
-        std::vector<float> feature512 = FPGAExtractor.extractFeature(img);
-        qfaceInfo.feature.assign(feature512.begin(), feature512.end());
+        std::vector<float> feature4096 = FPGAExtractor.extractFeature(img);
+        cv::Mat dataMat = cv::Mat(feature4096);
 #else
         //use centerFace
         std::vector<float> feature1024 = CenterExtractor->ExtractFeature(img);
         cv::Mat dataMat = cv::Mat(feature1024);
+#endif // USE_FPGA
         cv::Mat dst = pca.project(dataMat.t());
         qfaceInfo.feature.assign((float *)dst.datastart, (float *)dst.dataend);
-#endif // USE_FPGA
         qfaceInfoVec.push_back(qfaceInfo);
     }
     emit AddPersonAndFaceSig(qinfo, qfaceInfoVec);
@@ -888,7 +888,7 @@ void BlackListWidget::ShowFacesSlot(std::vector<std::string> facesUrl)
     picture_table->clear();
     if (facesUrl.size() == 0)
     {
-        //        qDebug() << "数据库中不存在该人员的人脸信息！";
+        qDebug() << "数据库中不存在该人员的人脸信息！";
         return;
     }
     for (size_t i = 0; i != facesUrl.size(); ++i)

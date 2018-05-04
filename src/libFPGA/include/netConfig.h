@@ -37,6 +37,7 @@ typedef signed char DTYPE;
 // File size is in num of DTYPE numbers
 #define IMAGE_FILE_SIZE (224 * 224 * 3)
 #define WEIGHTS_FILE_SIZE 124004086
+// #define WEIGHTS_FILE_SIZE 145002878
 #define LAYER_NUM 15 //without fc8
 #define CONV_NUM 13
 

@@ -115,15 +115,43 @@ int dim = 8630;
 //     getProb(output_reorder);
 // }
 
+float getMold(const vector<float> &vec)
+{ //求向量的模长
+    int n = vec.size();
+    float sum = 0.0;
+    for (int i = 0; i < n; ++i)
+        sum += vec[i] * vec[i];
+    return sqrt(sum);
+}
+
+float Similarity(const std::vector<float> &lhs, const std::vector<float> &rhs)
+{
+    size_t n = lhs.size();
+    assert(n == rhs.size());
+    float tmp = 0.0; //内积
+    for (size_t i = 0; i < n; ++i)
+        tmp += lhs[i] * rhs[i];
+    return tmp / (getMold(lhs) * getMold(rhs));
+}
+
 int main()
 {
     FeatureExtractor &mFeatureExtractor = FeatureExtractor::getInstance();
-    while (1)
+    cv::Mat img;
+    // while (1)
     {
-        cv::Mat img = cv::imread("/home/sh/workspace/PipeCNN/data/picture/cat.jpg");
-        vector<float> result = mFeatureExtractor.extractFeature(img);
-        dim = result.size();
-        cout << flush << "\r Feature dim: " << dim << endl;;
+        img = cv::imread("/home/sh/workspace/FaceRecognitionOnFPGA/data/7_0.jpg");
+        vector<float> result_1 = mFeatureExtractor.extractFeature(img);
+        for (size_t i = 1; i < 51; i++)
+        {
+            std::cout << result_1[i] << ' ';
+            if (i % 10 == 0)
+                cout << endl;
+        }
+        img = cv::imread("/home/sh/workspace/FaceRecognitionOnFPGA/data/7_1.jpg");
+        vector<float> result_2 = mFeatureExtractor.extractFeature(img);
+        std::cout << "Dim:  " << result_2.size() << endl;
+        std::cout << "\n Similarity:" << Similarity(result_1, result_2) << endl;
     }
 
     // verify(result);

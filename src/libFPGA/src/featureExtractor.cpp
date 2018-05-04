@@ -57,7 +57,7 @@ bool FeatureExtractor::initialDevice()
     checkError(status, "Failed to create context");
 
     // Create Program Objects
-    const char *kernel_file_name = kernelFile;
+    const char *kernel_file_name = kernelFile.c_str();
 
     // Create the program for all device. All devices execute the same kernel.
     program = createProgramFromFile(context, (const char *)kernel_file_name, device, num_devices);
@@ -207,9 +207,6 @@ void FeatureExtractor::executeKernel()
     // Kernel excutions main loops
     for (unsigned i = 0; i < num_devices; ++i)
     {
-
-        // loadImageToBuffer(pic_num);
-
         // Recorde the start time
         t.start();
 
@@ -615,7 +612,7 @@ void FeatureExtractor::executeKernel()
 
         t.stop();
         time = t.get_time_s();
-        printf("Total runtime: %fs \n", time);
+        // printf("Total runtime: %fs \n", time);
 
         // readDataBack();
 
@@ -956,7 +953,7 @@ int FeatureExtractor::prepare()
     }
 
     // Weights
-    bin_file_r.open(weight_file_path, ios::in | ios::binary);
+    bin_file_r.open(weight_file_path.c_str(), ios::in | ios::binary);
 
     if (bin_file_r.is_open())
     {

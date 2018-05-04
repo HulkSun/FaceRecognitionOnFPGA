@@ -339,17 +339,18 @@ void HandleWorker::MTCNNDetect(cv::Mat &img)
 
 #ifdef USE_FPGA
         //use FPGA
-        std::vector<float> feature = FPGAE.extractFeature(img);
+        std::vector<float> feature4096 = FPGAE.extractFeature(face);
+        cv::Mat dataMat = cv::Mat(feature4096);
 #else
         //use centerFace
         std::vector<float> feature1024 = CenterE->ExtractFeature(face);
         cv::Mat dataMat = cv::Mat(feature1024);
+#endif
         qmtx.lock();
         cv::Mat dst = pca.project(dataMat.t());
         qmtx.unlock();
         std::vector<float> feature;
         feature.assign((float *)dst.datastart, (float *)dst.dataend);
-#endif
         extractTake += alignTime.elapsed();
         //        qDebug() << QString::number(userId) << " | extract feature" << alignTime.elapsed();
 
