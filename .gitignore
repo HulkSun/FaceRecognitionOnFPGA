@@ -32,6 +32,6 @@
 *.app
 
 build
-model/*
+# model/*
 data
-kernel/*
+# kernel/*
