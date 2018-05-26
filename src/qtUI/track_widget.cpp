@@ -406,7 +406,7 @@ void TrackWidget::ShowInTableSlot(int userId, const QString &name, const QString
         face_info_table->removeRow(rowCount - 1);
     }
     face_info_table->insertRow(0);
-    face_info_table->setRowHeight(0, rowHeight);
+    face_info_table->setRowHeight(0, rowHeight);    
 
 //    face_info_table->setItem(0, 0, item0);
 //    face_info_table->setItem(0, 1, item1);

@@ -301,7 +301,7 @@ void HandleWorker::MTCNNDetect(cv::Mat &img)
     std::vector<FaceInfo> faceInfo;
     MtcnnD->Detect(img, faceInfo, minSize, threshold, factor);
     detectTake = time.elapsed();
-    //    qDebug() << QString::number(userId) << " | detect takes" << time.elapsed();
+    qDebug() << QString::number(userId) << " | detect takes" << time.elapsed();
     cv::Mat initImage = img.clone();
     QPixmap pixmap = MatToQPixmap(img);
     QPainter painter(&pixmap);
@@ -352,14 +352,14 @@ void HandleWorker::MTCNNDetect(cv::Mat &img)
         std::vector<float> feature;
         feature.assign((float *)dst.datastart, (float *)dst.dataend);
         extractTake += alignTime.elapsed();
-        //        qDebug() << QString::number(userId) << " | extract feature" << alignTime.elapsed();
+        qDebug() << QString::number(userId) << " | extract feature" << alignTime.elapsed();
 
         alignTime.restart();
         qmtx.lock();
         SearchPersonInfo personInfo = blacklist_database->QueryPersonByFeature(feature);
         qmtx.unlock();
         queryTake += alignTime.elapsed();
-        //        qDebug() << QString::number(userId) << " | query time" << alignTime.elapsed();
+        qDebug() << QString::number(userId) << " | query time" << alignTime.elapsed();
 
         float center_x = y + h / 2;
         float center_y = x + w / 2;
@@ -461,7 +461,7 @@ void HandleWorker::MTCNNDetect(cv::Mat &img)
         KCFTracker kcfTracker(true, false, true, false); // kcf tracking
         kcfTracker.init(cv::Rect(y, x, w, h), img);      // kcf tracking
         trackerVec.push_back(kcfTracker);                // kcf tracking
-                                                         //        qDebug() << "-------------------------------------------";
+        // qDebug() << "-------------------------------------------";
     }
 
     if (numFace != 0 && lastTimeTake.elapsed() > 250)

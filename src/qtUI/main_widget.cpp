@@ -103,6 +103,7 @@ MainWidget::MainWidget(QWidget *parent)
     main_layout->setMargin(0);
     this->setLayout(main_layout);
 
+
     TrainPCA("../data/PCATrainData");
 
     connect(windows_title, SIGNAL(MinWindowsSig()), this, SLOT(MinWindowsSlot()));
@@ -126,7 +127,7 @@ MainWidget::MainWidget(QWidget *parent)
     {
         emit StartPlayCameraSig(i, Cameras[i].url);
     }
-    blacklist_database->InitBlackList(100, DataDim / 2, 0.7, 1, 0);
+    blacklist_database->InitBlackList(100, DataDim / 2, 0.75, 1, 0);
     //        AddFaceDataSet("/home/lchy/dataset/facesData");
 }
 

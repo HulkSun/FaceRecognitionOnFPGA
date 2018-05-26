@@ -49,9 +49,9 @@ class FeatureExtractor
         cleanup();
     }
 
-    std::string kernelFile = "/home/sh/workspace/OpenCLkernel/conv_16_32.aocx";
+    std::string kernelFile = "../kernel/conv_16_32.aocx";
     const char *vendor_name = "Intel";
-    std::string weight_file_path = "/home/sh/data/vgg_face_self/weights.dat";
+    std::string weight_file_path = "../model/weights.dat";
 
     // Configuration file instructions
     enum config_item
